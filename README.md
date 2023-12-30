@@ -1,6 +1,6 @@
 ![TWP_logo](./Screenshots/TWP_Logo.png)
 
-This is a puzzle game for Android (executable for Windows is also available), that i decided to create after completing [Jonathan Blow](https://twitter.com/jonathan_blow)'s game [The Witness](http://store.steampowered.com/app/210970/The_Witness).
+This is a puzzle game for old sweet Winphones (Windows 10 Mobile cancelled by MS at/in 2017), that i decided to create after completing [Jonathan Blow](https://twitter.com/jonathan_blow)'s game [The Witness](http://store.steampowered.com/app/210970/The_Witness).
 I truly admire this game, and i wanted more of it. So i created The Witness Puzzles.  
 
 In original The Witness there is an island to explore, filled with panels to solve.
@@ -8,11 +8,7 @@ A panel (usually) contains a grid with entry point, exit point and set of rules,
 
 In my game i've made a procedural generator of such panels, so i can play these puzzles indefinitely.
 
-<img src="./Screenshots/android 1.png" width="160" />&nbsp;
-<img src="./Screenshots/android 2.png" width="160" />&nbsp;
-<img src="./Screenshots/android 3.png" width="160" />&nbsp;
-<img src="./Screenshots/android 4.png" width="160" />&nbsp;
-<img src="./Screenshots/android 5.png" width="160" />&nbsp;
+<img src="./Screenshots/winphone 1.png" width="320" />&nbsp;
 
   
 ### Q: Where can i download it?
@@ -30,20 +26,16 @@ It has to be noted though that _**figuring out what those rules are in the first
 
 
 ## Technologies and stuff
-- .NET Framework 4.7 and C# 7.0
-- [MonoGame Framework 3.6](http://www.monogame.net)
+- UWP and C# 7.0
+- [Tweaked/UWP-ported MonoGame Framework](http://www.monogame.net)
 - Slightly modified [BloomFilter for Monogame and XNA](https://github.com/Kosmonaut3d/BloomFilter-for-Monogame-and-XNA) shader by Kosmonaut3d
 - You'll need `Mobile development with .NET` workload (namely `Xamarin`) as well as `Android NDK (R13B)` component in your Visual Studio in order to compile Android project
-- [Roboto font](https://fonts.google.com/specimen/Roboto) has to be installed in the system in order to compile MonoGame resources
-- Target Android SDK: API level 25
+- Windows SDKs: 19041 + 10240
 
 ## Solution structure
-- `TWP Android` – Android build project, contains only main activity and configurations.
-- `TWP Desktop` – Windows build project, contains only Main() method and configurations.
-- `TWP Shared` – this is the first of the two main projects, contains all the game code. Its code is shared by Android and Desktop projects.
-- `TWPBaseLib` – this is the second of the two main projects, contains all the core logic and algorithms.
-- `TWPVisualizer` – this is more of a legacy project, where i tested BaseLib functionality. Should not be used. GUI totally is not foolproof.
-
+- `TheWitnessPuzzles` – this is the main project, contains all the game code. 
+- `TWPBaseLib` folder – this is the special part ("library") of main project that contains all the core logic and algorithms 
+- `MonoGame` – special MonoGame Framework tweaked by me... it's old new thing that supports W10M (Astoria) :)
 
 ## Disclaimer
 Sound effects i used are extracted sounds from the original The Witness that i found on the Internet. I do not own these assets, all rights to them belong to Jonathan Blow and Thekla Inc.  
@@ -103,3 +95,15 @@ panel.Grid[4, 3].Rule = new TetrisRotatableRule(new bool[,] { { false, true },
                                                               { false, true } }, 
                                                 isSubtractiveShape);
 ```
+
+## Reference(s)
+- https://github.com/SerGreen/
+- https://github.com/SerGreen/TheWitnessPuzzles
+- https://github.com/MonoGame/MonoGame
+
+## .
+As is. No support. RnD only
+
+## ..
+- [M]edia[E]xplorer
+- 2023, Dec 30

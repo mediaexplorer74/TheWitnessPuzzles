@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-//using GameManager;
 using TheWitnessPuzzles;
 using System.Threading;
 
@@ -26,11 +25,11 @@ namespace GameManager
 
         public Game1()
         {
-            //_graphics = new GraphicsDeviceManager(this) 
-            //{
-            //    SynchronizeWithVerticalRetrace = true 
-            //};
-            _graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this) 
+            {
+                SynchronizeWithVerticalRetrace = true 
+            };
+            //_graphics = new GraphicsDeviceManager(this);
             
             Content.RootDirectory = "Content";
 
@@ -66,8 +65,16 @@ namespace GameManager
 //#endif
 
             Window.ClientSizeChanged += ResizeScreen;
-            this.Activated += (object sender, EventArgs e) => InputManager.IsFocused = true;
-            this.Deactivated += (object sender, EventArgs e) => InputManager.IsFocused = false;
+
+            this.Activated += (object sender, EventArgs e) =>
+            {
+                InputManager.IsFocused = true;
+            };
+            
+            this.Deactivated += (object sender, EventArgs e) =>
+            {
+                InputManager.IsFocused = false;
+            };
 
 //#if ANDROID
 //            SettingsManager.OrientationLockChanged += () =>
@@ -206,10 +213,13 @@ namespace GameManager
             IsMouseVisible = true;
 
             //RnD
+            _graphics.IsFullScreen = SettingsManager.IsFullscreen;
+            _graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+            _graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+            //SetScreenOrientation(SettingsManager.ScreenOrientation);
+            TouchPanel.EnabledGestures = GestureType.Tap | GestureType.FreeDrag;
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
-            
-            _graphics.ApplyChanges();
-
+            _graphics.ApplyChanges();      
 #endif
         }
 
@@ -247,7 +257,6 @@ namespace GameManager
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             Glob.SpriteBatch = _spriteBatch;
 
-            // ?
             _screenManager.LoadContent();
             
             SoundManager.LoadContent(Content);
@@ -301,7 +310,6 @@ namespace GameManager
             //    ScreenManager.Instance.AddScreen<PanelGameScreen>(true, true, DI.Get<PanelGenerator>().GeneratePanel());
 
             Glob.Update(gameTime);            
-            //_gameManager.Update();
             _screenManager.Update(gameTime);            
             InputManager.Update();
             base.Update(gameTime);
@@ -313,11 +321,12 @@ namespace GameManager
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            //GraphicsDevice.Clear(Color.Black);
             _spriteBatch.Begin();
-            //_gameManager.Draw();
+
             _screenManager.Draw(_spriteBatch);            
+
             _spriteBatch.End();            
+
             base.Draw(gameTime);
         }
     }

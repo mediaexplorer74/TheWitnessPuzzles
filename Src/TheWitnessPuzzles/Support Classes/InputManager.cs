@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace GameManager
@@ -52,6 +53,7 @@ namespace GameManager
             Update();
         }
 
+        /*
         public static void Update1()
         {
             gestures = GetGestures().ToList();
@@ -61,20 +63,29 @@ namespace GameManager
             //    if (mouseLocked && IsFocused)
             //        ResetMouseToCenter();
         }
-
+        */
 
         private static IEnumerable<GestureSample> GetGestures()
         {
             if (IsFocused)
             {
-                //while (TouchPanel.IsGestureAvailable)
-                //    yield return TouchPanel.ReadGesture();
-            }
-            return default;
+                while (TouchPanel.IsGestureAvailable)
+                    yield return TouchPanel.ReadGesture();
+            }           
         }
 
         public static void Update()
         {
+            //Experimental ---------------------------
+
+            gestures = GetGestures().ToList();
+            prevMouse = Mouse.GetState();
+            prevKB = Keyboard.GetState();
+
+            //    if (mouseLocked && IsFocused)
+            //        ResetMouseToCenter();
+
+            // ---------------------------------------
             _direction = Vector2.Zero;
 
             // Kbd handle
@@ -112,12 +123,20 @@ namespace GameManager
         {
             if (IsFocused)
             {
-                // Touch screen first
-                //foreach (var gesture in gestures)
-                //{
-                //    if (gesture.GestureType == GestureType.Tap)
-                //        return gesture.Position.ToPoint();
-                //}
+                try
+                {
+
+                    // Touch screen first
+                    foreach (var gesture in gestures)
+                    {
+                        if (gesture.GestureType == GestureType.Tap)
+                            return gesture.Position.ToPoint();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[ex] Gestures handling error: " + ex.Message);
+                }
 
                 // Then mouse
                 if (prevMouse.LeftButton == ButtonState.Released
@@ -138,16 +157,26 @@ namespace GameManager
 
             if (IsFocused)
             {
-                //foreach (var gesture in gestures.Where(x => x.GestureType == GestureType.FreeDrag))
-                //{
-                //    result += gesture.Delta;
-                //}
-
+                // gestures
+                try
+                {
+                    foreach (var gesture in gestures.Where(x => x.GestureType == GestureType.FreeDrag))
+                    {
+                        result += gesture.Delta;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("[ex] Gestures handling error: " + ex.Message);
+                }
+            
+                // kbd 
                 if (Keyboard.GetState().IsKeyDown(Keys.Right)) result.X += moveStep;
                 if (Keyboard.GetState().IsKeyDown(Keys.Left)) result.X -= moveStep;
                 if (Keyboard.GetState().IsKeyDown(Keys.Down)) result.Y += moveStep;
                 if (Keyboard.GetState().IsKeyDown(Keys.Up)) result.Y -= moveStep;
 
+                // mouse
                 if (mouseLocked)
                 {
                     Point center = Game.Window.ClientBounds.Center - Game.Window.ClientBounds.Location;
